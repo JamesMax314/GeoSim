@@ -13,6 +13,7 @@ set(CMAKE_BUILD_TYPE debug)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
 
 # Set the source files for your project
 # Collect all .cpp files in the src directory and its subdirectories
@@ -25,4 +26,4 @@ file(GLOB_RECURSE HEADER_FILES "src/*.h")
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
 # Link GLFW and OpenGL libraries to your target
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw OpenGL::GL GLEW::GLEW)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw OpenGL::GL GLEW::GLEW glm::glm)
