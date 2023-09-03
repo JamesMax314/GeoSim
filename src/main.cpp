@@ -50,15 +50,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     } else if (action == GLFW_RELEASE) {
         keys[key] = false; // Set the key state to false when released
     }
-    
-    if (action == GLFW_PRESS) {
-        // Key was pressed
-        if (key == GLFW_KEY_W) {
-            cam.move(0.0f, 0.0f, cam.motionSpeed*deltaTime); // Close the window when ESC is pressed
-        } else if (key == GLFW_KEY_S) {
-            cam.move(0.0f, 0.0f, -cam.motionSpeed*deltaTime); // Close the window when ESC is pressed
-        } 
-    }
 }
 
 int main() {
@@ -92,6 +83,8 @@ int main() {
 
         currentFrameTime = glfwGetTime();
         deltaTime = currentFrameTime - previousFrameTime;
+        std::cout << '\r' << "                         " << std::flush;
+        std::cout << '\r' << "FPS: " << 1/deltaTime << std::flush;
 
         if (keys[GLFW_KEY_W]) {
             cam.move(0.0f, 0.0f, cam.motionSpeed*deltaTime); // Close the window when ESC is pressed

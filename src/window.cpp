@@ -11,7 +11,7 @@ GLFWwindow* window::setupWindow() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
-    std::cout << "I'm apple machine" << std::endl;
+    // std::cout << "I'm apple machine" << std::endl;
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
