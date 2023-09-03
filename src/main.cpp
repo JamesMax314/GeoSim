@@ -81,10 +81,6 @@ int main() {
         currentFrameTime = glfwGetTime();
         deltaTime = currentFrameTime - previousFrameTime;
 
-        // Update model matrix (rotation)
-        // model = glm::rotate(model, (float)glfwGetTime()/1000, glm::vec3(1.0f, 0.5f, 0.2f));
-        // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
         // testD.updatePerspective(cam.viewMatrix);
         testD.draw(window);
 
