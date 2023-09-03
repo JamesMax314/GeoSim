@@ -26,7 +26,7 @@ namespace drawable {
         void updatePerspective(glm::mat4 viewMatrix);
 
         ThreeDimMesh();
-        ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, float* vertices, unsigned int* indices);
+        ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, float* vertices, unsigned int* indices, int numVerts, int numInds);
         ~ThreeDimMesh();
         
 
@@ -37,6 +37,8 @@ namespace drawable {
         float fogDensity;
         float* mVertices;
         unsigned int* mIndices;
+        int vertSize;
+        int indSize;
 
         GLuint VAO;
         GLuint VBO;

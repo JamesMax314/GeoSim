@@ -50,10 +50,10 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(mVertices), mVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertSize, mVertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(mIndices), mIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indSize, mIndices, GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -67,14 +67,14 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window)
 
 void drawable::ThreeDimMesh::updatePerspective(glm::mat4 viewMatrix)
 {
-    // view = viewMatrix;
+    view = viewMatrix;
 }
 
 drawable::ThreeDimMesh::ThreeDimMesh()
 {
 }
 
-drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, float* vertices, unsigned int* indices)
+drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, float* vertices, unsigned int* indices, int numVerts, int numInds)
 {
     // Define projection, view, and model matrices
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -87,6 +87,8 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     // Store the model parameters
     mVertices = vertices;
     mIndices = indices;
+    vertSize = numVerts;
+    indSize = numInds;
 
     // Create a Vertex Buffer Object (VBO)
     glGenVertexArrays(1, &VAO);
