@@ -39,6 +39,16 @@ unsigned int indices[] = {
     5, 4, 0,
 };
 
+unsigned int indices2[] = {
+    0, 1, 2,
+    2, 3, 0,
+    4, 5, 6,
+    6, 7, 4,
+    0, 3, 7,
+    7, 4, 0,
+    1, 2, 6,
+};
+
 double deltaTime;
 camera::Camera cam;
 
@@ -69,6 +79,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     } else if (action == GLFW_RELEASE) {
         keys[key] = false; // Set the key state to false when released
     }
+
+    if (key == GLFW_KEY_ESCAPE) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetWindowShouldClose(window, GLFW_TRUE); // Close the window when ESC is pressed
+    }
 }
 
 int main() {
@@ -84,6 +99,8 @@ int main() {
     cam = camera::Camera();
 
     drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 0, vertices, indices, sizeof(vertices), sizeof(indices));
+    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 0, vertices, indices2, sizeof(vertices), sizeof(indices));
+
 
     // Enable depth testing
     glEnable(GL_DEPTH_TEST);
@@ -94,6 +111,7 @@ int main() {
     // Keyboard input callback
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, cursorPosCallback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray color with RGB values of 0.5 (50% gray)
 
@@ -131,8 +149,10 @@ int main() {
             deltaY = 0;
         }
 
-        testD.updatePerspective(cam.viewMatrix);
-        testD.draw(window);
+        // testD.updatePerspective(cam.viewMatrix);
+        // testD.draw(window, cam);
+
+        meshDraw.draw(window, cam);
 
         // Update the previous frame time for the next frame
         previousFrameTime = currentFrameTime;
@@ -146,3 +166,5 @@ int main() {
     glfwTerminate();
     return 0;
 }
+
+// TODO: add an object class that contains a drawable and a collision mesh

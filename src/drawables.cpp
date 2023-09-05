@@ -4,7 +4,7 @@ void drawable::Drawable::update()
 {
 }
 
-void drawable::Drawable::draw(GLFWwindow* window)
+void drawable::Drawable::draw(GLFWwindow* window, camera::Camera cam)
 {
     // glfwMakeContextCurrent(window);
 }
@@ -18,10 +18,12 @@ void drawable::ThreeDimMesh::update()
     
 }
 
-void drawable::ThreeDimMesh::draw(GLFWwindow* window)
+void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
 {
     // To allow rendering to the visible screen, we need the set the context
     glfwMakeContextCurrent(window);
+
+    view = cam.viewMatrix;
 
     // Activate the appropriate shader program
     GLuint shaderProgram = mShaderManager.activateShader(shaderProgramIndex);

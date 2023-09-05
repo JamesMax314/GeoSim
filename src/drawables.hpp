@@ -8,13 +8,14 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "shaders.hpp"
+#include "camera.hpp"
 
 namespace drawable {
     class Drawable {
         public:
         unsigned int shaderProgramIndex;
         virtual void update();
-        virtual void draw(GLFWwindow* window);
+        virtual void draw(GLFWwindow* window, camera::Camera cam);
 
         Drawable();
     };
@@ -22,7 +23,7 @@ namespace drawable {
     class ThreeDimMesh : public Drawable {
         public:
         void update() override;
-        void draw(GLFWwindow* window) override;
+        void draw(GLFWwindow* window, camera::Camera cam) override;
         void updatePerspective(glm::mat4 viewMatrix);
 
         ThreeDimMesh();
