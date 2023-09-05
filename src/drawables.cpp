@@ -78,9 +78,7 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
 {
     // Define projection, view, and model matrices
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::mat4(1.0f); // Identity matrix for now
-    // Set the fog color and density values:
     fogColor = glm::vec3(0.5f, 0.5f, 0.5f); // Example fog color (gray)
     fogDensity = 2.0f; // Example fog density (adjust as needed)
 

@@ -44,6 +44,25 @@ camera::Camera cam;
 
 bool keys[GLFW_KEY_LAST] = { false };
 
+double prevMouseX = 0.0;
+double prevMouseY = 0.0;
+double deltaX;
+double deltaY;
+
+// Mouse cursor position callback function
+void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
+    // Calculate the change in mouse cursor position
+    deltaX = xpos - prevMouseX;
+    deltaY = ypos - prevMouseY;
+
+    // Update the previous mouse cursor position
+    prevMouseX = xpos;
+    prevMouseY = ypos;
+
+    // Use deltaX and deltaY to respond to mouse movement
+    // Your code here
+}
+
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         keys[key] = true; // Set the key state to true when pressed
@@ -74,6 +93,7 @@ int main() {
 
     // Keyboard input callback
     glfwSetKeyCallback(window, keyCallback);
+    glfwSetCursorPosCallback(window, cursorPosCallback);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray color with RGB values of 0.5 (50% gray)
 
@@ -83,8 +103,8 @@ int main() {
 
         currentFrameTime = glfwGetTime();
         deltaTime = currentFrameTime - previousFrameTime;
-        std::cout << '\r' << "                         " << std::flush;
-        std::cout << '\r' << "FPS: " << 1/deltaTime << std::flush;
+        // std::cout << '\r' << "                         " << std::flush;
+        // std::cout << '\r' << "FPS: " << 1/deltaTime << std::flush;
 
         if (keys[GLFW_KEY_W]) {
             cam.move(0.0f, 0.0f, cam.motionSpeed*deltaTime); // Close the window when ESC is pressed
@@ -103,6 +123,12 @@ int main() {
         }
         if (keys[GLFW_KEY_LEFT_SHIFT]) {
             cam.move(0.0f, cam.motionSpeed*deltaTime, 0.0f); // Close the window when ESC is pressed
+        }
+
+        if (deltaX != 0.0 || deltaY != 0.0) {
+            cam.rotate(deltaX, deltaY);
+            deltaX = 0;
+            deltaY = 0;
         }
 
         testD.updatePerspective(cam.viewMatrix);
