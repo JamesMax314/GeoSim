@@ -121,7 +121,7 @@ int main() {
 
     cam = camera::Camera();
 
-    terrain::MeshGen perlinMesh(20, 20, 200, 200);
+    terrain::MeshGen perlinMesh(400, 400, 2000, 2000);
     perlinMesh.genPerlinMesh();
 
     // drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 1, vertices, indices3, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));
@@ -196,3 +196,4 @@ int main() {
 }
 
 // TODO: add an object class that contains a drawable and a collision mesh
+// TODO: make drawable able to use different shaders with different parameters, i.e. have a list of parameters and names that can be passed. may need a try catch to handle the types
