@@ -32,3 +32,19 @@ GLFWwindow* window::setupWindow() {
 
     return window;
 }
+
+void window::setFullScreen(GLFWwindow* window)
+{
+    GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+
+    // Get the video mode of the primary monitor
+    const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+
+    // Switch to fullscreen mode
+    glfwSetWindowMonitor(window, primaryMonitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+}
+
+void window::setSmallScreen(GLFWwindow *window)
+{
+    glfwSetWindowMonitor(window, NULL, 100, 100, 800, 600, GLFW_DONT_CARE);
+}

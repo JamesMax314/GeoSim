@@ -72,6 +72,7 @@ double deltaTime;
 camera::Camera cam;
 
 bool keys[GLFW_KEY_LAST] = { false };
+bool fullScreen = false;
 
 double prevMouseX = 0.0;
 double prevMouseY = 0.0;
@@ -95,9 +96,22 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         keys[key] = true; // Set the key state to true when pressed
+
+        if (key == GLFW_KEY_F) {
+            if (fullScreen) {
+                window::setSmallScreen(window);
+                fullScreen = false;
+            } else {
+                window::setFullScreen(window);
+                fullScreen = true;
+            }
+        }
+
     } else if (action == GLFW_RELEASE) {
         keys[key] = false; // Set the key state to false when released
     }
+
+    
 
     if (key == GLFW_KEY_ESCAPE) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
@@ -197,3 +211,6 @@ int main() {
 
 // TODO: add an object class that contains a drawable and a collision mesh
 // TODO: make drawable able to use different shaders with different parameters, i.e. have a list of parameters and names that can be passed. may need a try catch to handle the types
+// TODO: wite a collision detector that takes a vertex array and checks for intersection between adjacent vertices. resolve gravity and cancle frictino to find the force on the player
+// Will need a material class and a world class with gravity etc...
+// TODO: rename window namespace

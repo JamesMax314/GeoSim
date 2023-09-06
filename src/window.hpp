@@ -11,4 +11,6 @@
 
 namespace window {
     GLFWwindow* setupWindow();
+    void setFullScreen(GLFWwindow* window);
+    void setSmallScreen(GLFWwindow* window);
 }
