@@ -29,54 +29,62 @@ void terrain::MeshGen::initPerlin()
             heightMap[x][y] = noiseValue;
         }
     }
-    printf("Noise Generated \n");
+    // printf("Noise Generated \n");
 }
 
 void terrain::MeshGen::genMeshFromHeight(std::vector<std::vector<float>> heightMap)
 {
     float minX = -sizeX/2;
     float maxX = sizeX/2;
-    float stepX = sizeX/numX;
+    float stepX = sizeX/(numX-1);
     float minY = -sizeX/2;
     float maxY = sizeX/2;
-    float stepY = sizeY/numY;
+    float stepY = sizeY/(numY-1);
 
     vertSize = numX*numY*3;
-    printf("vertSize %u \n", vertSize);
-    indSize = (numX-1)*(numY-1)*3*2; // 3 verts per triangle, 2 triangles per square
+    indSize = (numX-1)*(numY-1)*3*2; // 3 verts per triangle, 2 triangles per square 78 54
     vertices = new float[vertSize];
     indices = new unsigned int[indSize];
 
     for (int i=0; i<numX; i++) {
         for (int j=0; j<numY; j++) {
             vertices[j*3 + i*3*numY + 0] = minX+i*stepX;
-            vertices[j*3 + i*3*numY + 1] = heightMap[i][j];
+            vertices[j*3 + i*3*numY + 1] = heightMap[i][j]*4;
             vertices[j*3 + i*3*numY + 2] = minY+j*stepY;
         }
     }
 
     // for (int i=0; i<vertSize/3; i++) {
-    //     printf(" %f, %f, %f \n", vertices[i*3], vertices[i*3+1], vertices[i*3+2]);
+        // printf(" %f, %f, %f \n", vertices[i*3], vertices[i*3+1], vertices[i*3+2]);
     // }
 
+    // The last vertex in each dimension is included by the j+1 etc so we iterate up to N-1
     for (unsigned int i=0; i<numX-1; i++) {
         for (unsigned int j=0; j<numY-1; j++) {
-            indices[j*3 + i*3*numY+0] = j;
-            indices[j*3 + i*3*numY+1] = j+1;
-            indices[j*3 + i*3*numY+2] = (i+1)*numY+j;
+            indices[j*6 + i*6*(numY-1)+0] = i*numY + j;
+            indices[j*6 + i*6*(numY-1)+1] = i*numY + j+1;
+            indices[j*6 + i*6*(numY-1)+2] = (i+1)*numY+j;
 
             // printf("index: %u %u \n", j + i*numY+2, indices[j + i*numY+2]);
 
-            indices[j*3 + i*3*numY+3 + (numX-1)*(numY-1)] = numY*numX - j;
-            indices[j*3 + i*3*numY+4 + (numX-1)*(numY-1)] = numY*numX - (j+1);
-            indices[j*3 + i*3*numY+5 + (numX-1)*(numY-1)] = numY*numX - ((i+1)*numY+j);
+            indices[j*6 + i*6*(numY-1)+3] = numY*numX - (i*numY + j) - 1;
+            indices[j*6 + i*6*(numY-1)+4] = numY*numX - (i*numY + j+1) - 1;
+            indices[j*6 + i*6*(numY-1)+5] = numY*numX - ((i+1)*numY+j) - 1;
+
         }
     }
-    
+    // printf("proper size: %u \n", indSize);
+    // printf("indices Size: %u \n", (numY-2)*6 + (numX-2)*6*(numY-1)+5 + 1);
+
+    // printf(" %u, %u, %u \n", indices[0], indices[1], indices[2]);
+    // printf(" %u, %u, %u \n", indices[3], indices[4], indices[5]);
+
     // for (int i=0; i<indSize/6; i++) {
-    //     printf(" %u, %u, %u \n", indices[i*6], indices[i*6+1], indices[i*6+2]);
-    //     printf(" %u, %u, %u \n", indices[i*6+3], indices[i*6+4], indices[i*6+5]);
+        // printf(" %u, %u, %u \n", indices[i*6], indices[i*6+1], indices[i*6+2]);
+        // printf(" %u, %u, %u \n", indices[i*6+3], indices[i*6+4], indices[i*6+5]);
     // }
+
+    // printf("ind: %u \n", indices[indSize]);
 }
 
 void terrain::MeshGen::genPerlinMesh()

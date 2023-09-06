@@ -35,6 +35,7 @@ namespace drawable {
         glm::mat4 view;
         glm::mat4 model;
         glm::vec3 fogColor;
+        float rockScale;
         float fogDensity;
         float* mVertices;
         unsigned int* mIndices;

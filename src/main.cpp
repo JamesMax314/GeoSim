@@ -43,6 +43,21 @@ unsigned int indices[] = {
     5, 4, 0,
 };
 
+unsigned int indices3[] = {
+    7, 4, 0,
+    0, 0, 0,
+    6, 5, 1,
+    0, 0, 0,
+    6, 7, 3,
+    0, 0, 0,
+    5, 4, 0,
+    0, 0, 0,
+    2, 3, 0,
+    0, 0, 0,
+    6, 7, 4,
+    0, 0, 0,
+};
+
 unsigned int indices2[] = {
     0, 1, 2,
     2, 3, 0,
@@ -96,17 +111,21 @@ int main() {
 
     const char* vertexShaderFile = "../src/shaders/3d_vert.glsl";
     const char* fragmentShaderFile = "../src/shaders/3d_frag.glsl";
+    const char* rocks_fragmentShaderFile = "../src/shaders/colourHills_frag.glsl";
+
 
     shaders::ShaderManager shaderMan = shaders::ShaderManager();
     shaderMan.addShader(vertexShaderFile, fragmentShaderFile);
+    shaderMan.addShader(vertexShaderFile, rocks_fragmentShaderFile);
+
 
     cam = camera::Camera();
 
-    terrain::MeshGen perlinMesh(1, 1, 100, 100);
+    terrain::MeshGen perlinMesh(20, 20, 200, 200);
     perlinMesh.genPerlinMesh();
 
-    drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 0, vertices, indices, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));
-    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 0, perlinMesh.vertices, perlinMesh.indices, perlinMesh.vertSize, perlinMesh.indSize);
+    // drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 1, vertices, indices3, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));
+    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 1, perlinMesh.vertices, perlinMesh.indices, perlinMesh.vertSize, perlinMesh.indSize);
 
 
     // Enable depth testing
@@ -132,22 +151,22 @@ int main() {
         // std::cout << '\r' << "FPS: " << 1/deltaTime << std::flush;
 
         if (keys[GLFW_KEY_W]) {
-            cam.move(0.0f, 0.0f, cam.motionSpeed*deltaTime); // Close the window when ESC is pressed
+            cam.move(0.0f, 0.0f, cam.motionSpeed*deltaTime);
         }
         if (keys[GLFW_KEY_S]) {
-            cam.move(0.0f, 0.0f, -cam.motionSpeed*deltaTime); // Close the window when ESC is pressed
+            cam.move(0.0f, 0.0f, -cam.motionSpeed*deltaTime);
         }
         if (keys[GLFW_KEY_A]) {
-            cam.move(cam.motionSpeed*deltaTime, 0.0f, 0.0f); // Close the window when ESC is pressed
+            cam.move(cam.motionSpeed*deltaTime, 0.0f, 0.0f);
         }
         if (keys[GLFW_KEY_D]) {
-            cam.move(-cam.motionSpeed*deltaTime, 0.0f, 0.0f); // Close the window when ESC is pressed
+            cam.move(-cam.motionSpeed*deltaTime, 0.0f, 0.0f);
         }
         if (keys[GLFW_KEY_SPACE]) {
-            cam.move(0.0f, -cam.motionSpeed*deltaTime, 0.0f); // Close the window when ESC is pressed
+            cam.move(0.0f, -cam.motionSpeed*deltaTime, 0.0f);
         }
         if (keys[GLFW_KEY_LEFT_SHIFT]) {
-            cam.move(0.0f, cam.motionSpeed*deltaTime, 0.0f); // Close the window when ESC is pressed
+            cam.move(0.0f, cam.motionSpeed*deltaTime, 0.0f);
         }
 
         if (deltaX != 0.0 || deltaY != 0.0) {
