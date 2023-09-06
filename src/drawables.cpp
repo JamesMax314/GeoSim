@@ -52,10 +52,10 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertSize, mVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertSize*sizeof(float), mVertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indSize, mIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indSize*sizeof(float), mIndices, GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -63,7 +63,7 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
 
     // Bind the vertex data and draw the mesh to the second buffer
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indSize, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 

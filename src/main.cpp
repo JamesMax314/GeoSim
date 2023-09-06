@@ -5,10 +5,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "extern/FastNoiseLite.hpp"
+
 #include "window.hpp"
 #include "camera.hpp"
+#include "terrain.hpp"
 #include "shaders.hpp"
 #include "drawables.hpp"
+
 
 // Vertex data for a 3D cube
 float vertices[] = {
@@ -98,8 +102,11 @@ int main() {
 
     cam = camera::Camera();
 
-    drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 0, vertices, indices, sizeof(vertices), sizeof(indices));
-    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 0, vertices, indices2, sizeof(vertices), sizeof(indices));
+    terrain::MeshGen perlinMesh(1, 1, 100, 100);
+    perlinMesh.genPerlinMesh();
+
+    drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 0, vertices, indices, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));
+    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 0, perlinMesh.vertices, perlinMesh.indices, perlinMesh.vertSize, perlinMesh.indSize);
 
 
     // Enable depth testing
@@ -153,6 +160,8 @@ int main() {
         // testD.draw(window, cam);
 
         meshDraw.draw(window, cam);
+        // testD.draw(window, cam);
+
 
         // Update the previous frame time for the next frame
         previousFrameTime = currentFrameTime;

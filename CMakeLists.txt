@@ -17,10 +17,10 @@ find_package(glm REQUIRED)
 
 # Set the source files for your project
 # Collect all .cpp files in the src directory and its subdirectories
-file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "src/*.cpp" "src/extern/*.cpp")
 
 # Collect all .h files in the src directory and its subdirectories
-file(GLOB_RECURSE HEADER_FILES "src/*.h")
+file(GLOB_RECURSE HEADER_FILES "src/*.h" "src/extern/*.hpp")
 
 # Create an executable target
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
