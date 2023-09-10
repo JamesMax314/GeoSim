@@ -55,10 +55,10 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertSize*sizeof(float), mVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mVertices.size()*sizeof(glm::vec3), &mVertices.front(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indSize*sizeof(float), mIndices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size()*sizeof(unsigned int), &mIndices.front(), GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -66,7 +66,7 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
 
     // Bind the vertex data and draw the mesh to the second buffer
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indSize, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
@@ -79,7 +79,7 @@ drawable::ThreeDimMesh::ThreeDimMesh()
 {
 }
 
-drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, float* vertices, unsigned int* indices, int numVerts, int numInds)
+drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, std::vector<glm::vec3> vertices, std::vector<unsigned int> indices)
 {
     // Define projection, view, and model matrices
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -91,8 +91,6 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     // Store the model parameters
     mVertices = vertices;
     mIndices = indices;
-    vertSize = numVerts;
-    indSize = numInds;
 
     // Create a Vertex Buffer Object (VBO)
     glGenVertexArrays(1, &VAO);

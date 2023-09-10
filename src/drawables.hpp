@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -27,7 +28,7 @@ namespace drawable {
         void updatePerspective(glm::mat4 viewMatrix);
 
         ThreeDimMesh();
-        ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, float* vertices, unsigned int* indices, int numVerts, int numInds);
+        ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, std::vector<glm::vec3> vertices, std::vector<unsigned int> indices);
         ~ThreeDimMesh();
         
 
@@ -37,10 +38,8 @@ namespace drawable {
         glm::vec3 fogColor;
         float rockScale;
         float fogDensity;
-        float* mVertices;
-        unsigned int* mIndices;
-        int vertSize;
-        int indSize;
+        std::vector<glm::vec3> mVertices;
+        std::vector<unsigned int> mIndices;
 
         GLuint VAO;
         GLuint VBO;

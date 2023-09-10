@@ -27,10 +27,15 @@ void camera::Camera::rotate(float dx, float dy)
     viewMatrix = glm::lookAt(camPos, cameraTarget, cameraUp);
 }
 
+void camera::Camera::setViewMat(glm::mat4 view)
+{
+    viewMatrix = view;
+}
+
 camera::Camera::Camera()
 {
     // Set camera to origin
-    camPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    camPos = glm::vec3(0.0f, 0.0f, 0.0f);
     cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraTarget = camPos + cameraFront;
     cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);

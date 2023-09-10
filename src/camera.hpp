@@ -17,6 +17,7 @@ namespace camera {
 
         void move(float x, float y, float z);
         void rotate(float dx, float dy);
+        void setViewMat(glm::mat4 view);
 
         Camera();
     };
