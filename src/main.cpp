@@ -138,7 +138,7 @@ int main() {
 
     cam = camera::Camera();
 
-    terrain::MeshGen perlinMesh(40, 40, 200, 200);
+    terrain::MeshGen perlinMesh(40, 40, 2, 2);
     perlinMesh.genPerlinMesh();
 
     // drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 1, vertices, indices3, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));

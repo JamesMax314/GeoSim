@@ -42,6 +42,7 @@ namespace drawable {
         glm::mat4 model;
         glm::vec3 fogColor;
         glm::vec3 lightColor;
+        glm::vec3 lightPos;
         float rockScale;
         float fogDensity;
         std::vector<glm::vec3> mVertices;

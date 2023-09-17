@@ -44,6 +44,9 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     GLuint lightColourLocation = glGetUniformLocation(shaderProgram, "lightColour");
     glUniform3fv(lightColourLocation, 1, glm::value_ptr(lightColor));
 
+    GLuint lightPosLocation = glGetUniformLocation(shaderProgram, "lightLocation");
+    glUniform3fv(lightPosLocation, 1, glm::value_ptr(lightPos));
+
     // GLuint fogColorLocation = glGetUniformLocation(shaderProgram, "fogColor");
     // glUniform3fv(fogColorLocation, 1, glm::value_ptr(fogColor));
 
@@ -59,15 +62,23 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
 
     // Vertex buffer contains vertices and indices interleafed
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, mVertices.size()*sizeof(glm::vec3), &mVertices.front(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, interleafed.size()*sizeof(Vertex), &interleafed.front(), GL_STATIC_DRAW);
+
+    // Tell the shader how the interleafing should be undone
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+
+    // Enable and set up the "normal" attribute
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
     // Index buffer contains just the indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size()*sizeof(unsigned int), &mIndices.front(), GL_STATIC_DRAW);
 
     // Set the vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // glEnableVertexAttribArray(0);
 
     // Bind the vertex data and draw the mesh to the second buffer
     // glBindVertexArray(VAO);
@@ -93,18 +104,18 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     fogDensity = 0.0f; // Example fog density (adjust as needed)
     rockScale = 0.2f;
     lightColor = {1.0f, 1.0f, 0.0f};
+    lightPos = {0.0f, 1.0f, 0.0f};
 
     // Store the model parameters
     mVertices = vertices;
     mIndices = indices;
     normals = computeNormals(vertices, indices);
-    interleafed = interleafVertices(mVertices, normals);
+    // interleafed = interleafVertices(mVertices, normals);
 
     // Create a Vertex Buffer Object (VBO)
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-    glGenBuffers(1, &NBO);
 
     // Save the reference to the shader manager
     mShaderManager = shaderManager;
