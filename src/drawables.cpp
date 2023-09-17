@@ -41,6 +41,9 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     GLuint rockScaleLocation = glGetUniformLocation(shaderProgram, "rockScale");
     glUniform1f(rockScaleLocation, rockScale);
 
+    GLuint lightColourLocation = glGetUniformLocation(shaderProgram, "lightColour");
+    glUniform3fv(lightColourLocation, 1, glm::value_ptr(lightColor));
+
     // GLuint fogColorLocation = glGetUniformLocation(shaderProgram, "fogColor");
     // glUniform3fv(fogColorLocation, 1, glm::value_ptr(fogColor));
 
@@ -54,9 +57,11 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     // Bind all the model arrays to the appropriate buffers
     glBindVertexArray(VAO);
 
+    // Vertex buffer contains vertices and indices interleafed
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, mVertices.size()*sizeof(glm::vec3), &mVertices.front(), GL_STATIC_DRAW);
 
+    // Index buffer contains just the indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size()*sizeof(unsigned int), &mIndices.front(), GL_STATIC_DRAW);
 
@@ -65,7 +70,7 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     glEnableVertexAttribArray(0);
 
     // Bind the vertex data and draw the mesh to the second buffer
-    glBindVertexArray(VAO);
+    // glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
@@ -87,15 +92,19 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     fogColor = glm::vec3(0.5f, 0.5f, 0.5f); // Example fog color (gray)
     fogDensity = 0.0f; // Example fog density (adjust as needed)
     rockScale = 0.2f;
+    lightColor = {1.0f, 1.0f, 0.0f};
 
     // Store the model parameters
     mVertices = vertices;
     mIndices = indices;
+    normals = computeNormals(vertices, indices);
+    interleafed = interleafVertices(mVertices, normals);
 
     // Create a Vertex Buffer Object (VBO)
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
+    glGenBuffers(1, &NBO);
 
     // Save the reference to the shader manager
     mShaderManager = shaderManager;
@@ -107,4 +116,28 @@ drawable::ThreeDimMesh::~ThreeDimMesh()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
+}
+
+std::vector<drawable::Vertex> drawable::interleafVertices(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals)
+{
+    std::vector<drawable::Vertex> interleafed(vertices.size());
+    for (int i=0; i<vertices.size(); i++) {
+        interleafed[i].position = vertices[i];
+        interleafed[i].normal =  normals[i];
+    }
+
+    return interleafed;
+}
+
+std::vector<glm::vec3> drawable::computeNormals(std::vector<glm::vec3> vertices, std::vector<unsigned int> indices)
+{
+    std::vector<glm::vec3> normals(vertices.size());
+
+    for (int i=0; i<indices.size(); i++) {
+        glm::vec3 AB = glm::normalize(vertices[i+1] - vertices[i]);
+        glm::vec3 AC = glm::normalize(vertices[i+2] - vertices[i]);
+        normals[i] = glm::cross(AB, AC);
+    }
+
+    return normals;
 }

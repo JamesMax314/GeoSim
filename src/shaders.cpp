@@ -73,6 +73,8 @@ GLuint shaders::genShaderProgram(const char* vertexShaderFile, const char* fragm
     glDeleteShader(fragmentShader);
     glUseProgram(shaderProgram);
 
+    printf("Shader Compiled\n");
+
     return shaderProgram;
 }
 

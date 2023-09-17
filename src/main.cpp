@@ -129,10 +129,12 @@ int main() {
     const char* vertexShaderFile = "../src/shaders/3d_vert.glsl";
     const char* fragmentShaderFile = "../src/shaders/3d_frag.glsl";
     const char* rocks_fragmentShaderFile = "../src/shaders/colourHills_frag.glsl";
+    const char* phongFrag = "../src/shaders/phong.glsl";
 
     shaders::ShaderManager shaderMan = shaders::ShaderManager();
     shaderMan.addShader(vertexShaderFile, fragmentShaderFile);
     shaderMan.addShader(vertexShaderFile, rocks_fragmentShaderFile);
+    shaderMan.addShader(vertexShaderFile, phongFrag);
 
     cam = camera::Camera();
 
@@ -140,7 +142,7 @@ int main() {
     perlinMesh.genPerlinMesh();
 
     // drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 1, vertices, indices3, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));
-    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 1, perlinMesh.vertices, perlinMesh.indices);
+    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 2, perlinMesh.vertices, perlinMesh.indices);
 
     player::Player play(meshDraw, 0.5);
 

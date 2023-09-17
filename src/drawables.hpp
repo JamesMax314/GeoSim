@@ -12,6 +12,11 @@
 #include "camera.hpp"
 
 namespace drawable {
+    struct Vertex {
+        glm::vec3 position;
+        glm::vec3 normal;
+    };
+
     class Drawable {
         public:
         unsigned int shaderProgramIndex;
@@ -36,16 +41,29 @@ namespace drawable {
         glm::mat4 view;
         glm::mat4 model;
         glm::vec3 fogColor;
+        glm::vec3 lightColor;
         float rockScale;
         float fogDensity;
         std::vector<glm::vec3> mVertices;
+        std::vector<glm::vec3> normals;
+        std::vector<Vertex> interleafed;
         std::vector<unsigned int> mIndices;
 
+
+        // Intagers that are used to reference buffer arrays in gpu ram
         GLuint VAO;
-        GLuint VBO;
-        GLuint EBO;
+        GLuint VBO; // Vertices
+        GLuint EBO; // Indices
+        GLuint NBO; // Normals
+
 
 
         shaders::ShaderManager mShaderManager;
     };
+
+
+    std::vector<Vertex> interleafVertices(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
+    std::vector<glm::vec3> computeNormals(std::vector<glm::vec3> vertices, std::vector<unsigned int> indices);
+
+
 }
