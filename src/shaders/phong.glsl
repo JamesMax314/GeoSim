@@ -6,6 +6,8 @@ in vec3 normal;
 uniform float rockScale; // Adjusts how quickly grass changes to rocks
 uniform vec3 lightColour;
 uniform vec3 lightLocation;
+uniform vec3 viewPos;
+
 vec3 lightLoc;
 
 vec3 lightDir;
@@ -26,18 +28,51 @@ vec3 mountainColour(vec3 fragPos)
     return finalColor;
 }
 
-void main() {
+vec3 phong() {
     // Compute ambiant
     float ambientStrength = 0.1;
-    vec3 ambient = lightColour*ambientStrength;
 
     // Compute Diffuse
     lightDir = normalize(lightLocation - FragPos);
     float diff = max(dot(lightDir, normal), 0.0);
 
+    // Compute Specular
+    float specularStrength = 0.5;
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, normal); 
+    float spec = specularStrength*pow(max(dot(viewDir, reflectDir), 0.0), 32); 
+
+    vec3 lighting = (spec + diff + ambientStrength)*lightColour;
+
+    return lighting;
+}
+
+vec3 blingPhong() {
+        // Compute ambiant
+    float ambientStrength = 0.1;
+
+    // Compute Diffuse
+    lightDir = normalize(lightLocation - FragPos);
+    float diff = max(dot(lightDir, normal), 0.0);
+
+    // Compute Specular
+    float specularStrength = 0.5;
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    vec3 reflectDir = reflect(-lightDir, normal); 
+    float spec = specularStrength*pow(max(dot(viewDir, halfwayDir), 0.0), 32); 
+
+    vec3 lighting = (spec + diff + ambientStrength)*lightColour;
+
+    return lighting;
+}
+
+void main() {
+    vec3 lighting = blingPhong();
+
     vec3 groundColour = mountainColour(FragPos);
 
-    vec3 result = (diff + ambient) * groundColour;
+    vec3 result = lighting * groundColour;
     FragColor = vec4(result, 1.0);
 }
 

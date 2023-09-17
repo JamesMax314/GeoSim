@@ -40,6 +40,7 @@ namespace drawable {
         glm::mat4 projection;
         glm::mat4 view;
         glm::mat4 model;
+        glm::mat3 normalModel;
         glm::vec3 fogColor;
         glm::vec3 lightColor;
         glm::vec3 lightPos;

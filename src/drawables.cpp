@@ -32,6 +32,9 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
     GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
+    GLuint normalModelLoc = glGetUniformLocation(shaderProgram, "normalModel");
+    glUniformMatrix4fv(normalModelLoc, 1, GL_FALSE, glm::value_ptr(normalModel));
+
     GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
@@ -46,6 +49,9 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
 
     GLuint lightPosLocation = glGetUniformLocation(shaderProgram, "lightLocation");
     glUniform3fv(lightPosLocation, 1, glm::value_ptr(lightPos));
+
+    GLuint camPosLocation = glGetUniformLocation(shaderProgram, "viewPos");
+    glUniform3fv(camPosLocation, 1, glm::value_ptr(cam.camPos));
 
     // GLuint fogColorLocation = glGetUniformLocation(shaderProgram, "fogColor");
     // glUniform3fv(fogColorLocation, 1, glm::value_ptr(fogColor));
@@ -100,11 +106,12 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     // Define projection, view, and model matrices
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     model = glm::mat4(1.0f); // Identity matrix for now
+    normalModel = glm::mat3(glm::transpose(glm::inverse(model)));
     fogColor = glm::vec3(0.5f, 0.5f, 0.5f); // Example fog color (gray)
     fogDensity = 0.0f; // Example fog density (adjust as needed)
     rockScale = 0.2f;
     lightColor = {1.0f, 1.0f, 1.0f};
-    lightPos = {0.0f, 50.0f, 10.0f};
+    lightPos = {0.0f, 50.0f, 0.0f};
 
     // Store the model parameters
     mVertices = vertices;
