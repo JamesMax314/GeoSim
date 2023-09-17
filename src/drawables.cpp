@@ -103,14 +103,14 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     fogColor = glm::vec3(0.5f, 0.5f, 0.5f); // Example fog color (gray)
     fogDensity = 0.0f; // Example fog density (adjust as needed)
     rockScale = 0.2f;
-    lightColor = {1.0f, 1.0f, 0.0f};
-    lightPos = {0.0f, 1.0f, 0.0f};
+    lightColor = {1.0f, 1.0f, 1.0f};
+    lightPos = {0.0f, 50.0f, 10.0f};
 
     // Store the model parameters
     mVertices = vertices;
     mIndices = indices;
     normals = computeNormals(vertices, indices);
-    // interleafed = interleafVertices(mVertices, normals);
+    interleafed = interleafVertices(vertices, normals);
 
     // Create a Vertex Buffer Object (VBO)
     glGenVertexArrays(1, &VAO);
@@ -143,11 +143,20 @@ std::vector<drawable::Vertex> drawable::interleafVertices(std::vector<glm::vec3>
 std::vector<glm::vec3> drawable::computeNormals(std::vector<glm::vec3> vertices, std::vector<unsigned int> indices)
 {
     std::vector<glm::vec3> normals(vertices.size());
+    // printf("indices size: %u\n", indices.size());
 
-    for (int i=0; i<indices.size(); i++) {
-        glm::vec3 AB = glm::normalize(vertices[i+1] - vertices[i]);
-        glm::vec3 AC = glm::normalize(vertices[i+2] - vertices[i]);
-        normals[i] = glm::cross(AB, AC);
+    for (int i=0; i<(int)(indices.size()/3); i++) {
+        glm::vec3 AB = vertices[indices[3*i+1]] - vertices[indices[3*i]];
+        glm::vec3 AC = vertices[indices[3*i+2]] - vertices[indices[3*i]];
+        glm::vec3 norm = glm::normalize(glm::cross(AB, AC));
+        // if (norm[1] < 0) {
+        //     norm = -norm;
+        // }
+        for (int j=0; j<3; j++) {
+            normals[indices[3*i+j]] = norm;
+        }
+        // printf("normals: [%f, %f, %f]\n", normals[indices[3*i]][0], normals[indices[3*i]][1], normals[indices[3*i]][2]);
+
     }
 
     return normals;

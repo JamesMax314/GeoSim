@@ -6,6 +6,7 @@ in vec3 normal;
 uniform float rockScale; // Adjusts how quickly grass changes to rocks
 uniform vec3 lightColour;
 uniform vec3 lightLocation;
+vec3 lightLoc;
 
 vec3 lightDir;
 
@@ -30,9 +31,9 @@ void main() {
     float ambientStrength = 0.1;
     vec3 ambient = lightColour*ambientStrength;
 
-    // Compute Diffuse\
+    // Compute Diffuse
     lightDir = normalize(lightLocation - FragPos);
-    float diff = max(dot(normal, lightDir), 0.0);
+    float diff = max(dot(lightDir, normal), 0.0);
 
     vec3 groundColour = mountainColour(FragPos);
 
