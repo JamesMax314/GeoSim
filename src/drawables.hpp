@@ -12,59 +12,67 @@
 #include "camera.hpp"
 
 namespace drawable {
-    struct Vertex {
+    typedef glm::vec3 Vertex;
+
+    struct VertexNormal {
         glm::vec3 position;
         glm::vec3 normal;
+    };
+
+    struct VertexNormalText {
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec3 texture;
     };
 
     class Drawable {
         public:
         unsigned int shaderProgramIndex;
-        virtual void update();
-        virtual void draw(GLFWwindow* window, camera::Camera cam);
 
-        Drawable();
-    };
-
-    class ThreeDimMesh : public Drawable {
-        public:
-        void update() override;
-        void draw(GLFWwindow* window, camera::Camera cam) override;
-        void updatePerspective(glm::mat4 viewMatrix);
-
-        ThreeDimMesh();
-        ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, std::vector<glm::vec3> vertices, std::vector<unsigned int> indices);
-        ~ThreeDimMesh();
-
-        int lightingMode;
-        glm::mat4 projection;
-        glm::mat4 view;
-        glm::mat4 model;
-        glm::mat3 normalModel;
-        glm::vec3 fogColor;
-        glm::vec3 lightColor;
-        glm::vec3 lightPos;
-        float rockScale;
-        float fogDensity;
         std::vector<glm::vec3> mVertices;
-        std::vector<glm::vec3> normals;
-        std::vector<Vertex> interleafed;
         std::vector<unsigned int> mIndices;
-
 
         // Intagers that are used to reference buffer arrays in gpu ram
         GLuint VAO;
         GLuint VBO; // Vertices
         GLuint EBO; // Indices
         GLuint NBO; // Normals
+        glm::mat4 model;
+        glm::mat3 normalModel;
 
+        Drawable();
+        void fillBuffers();
+        void loadUniforms(GLuint shader);
+        void draw(GLFWwindow* w);
+    };
 
+    class GroundMesh : public Drawable {
+        public:
+        void updatePerspective(glm::mat4 viewMatrix);
+        void fillBuffers(GLFWwindow* w);
+        void loadUniforms(GLuint shader);
+
+        GroundMesh();
+        GroundMesh(unsigned int shaderInd, std::vector<glm::vec3> vertices, std::vector<unsigned int> indices);
+        ~GroundMesh();
+
+        int lightingMode;
+        glm::mat4 projection;
+        glm::mat4 view;
+        glm::mat3 normalModel;
+
+        float lightingModerockScale;
+        float rockScale;
+
+        // Object meshes require normlas for lighting
+        std::vector<glm::vec3> normals;
+        std::vector<VertexNormal> interleafed;
 
         shaders::ShaderManager mShaderManager;
     };
 
 
-    std::vector<Vertex> interleafVertices(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
+    std::vector<VertexNormal> interleafVertices(std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals);
     std::vector<glm::vec3> computeNormals(std::vector<glm::vec3> vertices, std::vector<unsigned int> indices);
 
 

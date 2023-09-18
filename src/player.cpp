@@ -74,7 +74,7 @@ void player::Player::physicsUpdate(float dt)
     resolveGroundCollision();
 }
 
-player::Player::Player(drawable::ThreeDimMesh& ground, float camHeight)
+player::Player::Player(drawable::GroundMesh& ground, float camHeight)
 {
     flying = true;
     grounded = false;

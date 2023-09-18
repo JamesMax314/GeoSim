@@ -24,7 +24,7 @@ namespace player
         glm::vec3 down;
         glm::vec3 up;
 
-        drawable::ThreeDimMesh mGround;
+        drawable::GroundMesh mGround;
 
         void move(float x, float y, float z);
         void rotate(float dx, float dy);
@@ -36,6 +36,6 @@ namespace player
         void resolveGroundCollision();
         void toggleFly();
         void physicsUpdate(float dt);
-        Player(drawable::ThreeDimMesh &ground, float camHeight);
+        Player(drawable::GroundMesh &ground, float camHeight);
     };
 }

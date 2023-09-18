@@ -45,14 +45,14 @@ classDiagram
     Drawable <|-- Light
 
     class Window {
-    -GLFWwindow* window
-    -ShaderManager shaderMan
-    -vector<Light> lights
-    -vector<Drawable> meshes
-    -Camera cam
-    +void addLight(&Light)
-    +void removeLight(&Light)
-    +GLFWwindow* getWindow()
-    +void renderFrame()
+        -GLFWwindow* window
+        -ShaderManager shaderMan
+        -vector<Light> lights
+        -vector<Drawable> meshes
+        -Camera cam
+        +void addLight(&Light)
+        +void removeLight(&Light)
+        +GLFWwindow* getWindow()
+        +void renderFrame()
     }
 ```

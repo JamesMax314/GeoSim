@@ -131,17 +131,20 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 int main() {
 
-    GLFWwindow* window = window::setupWindow();
+    // GLFWwindow* window = window::setupWindow();
+    window::Window mWindow = window::Window();
+    // GLFWwindow* contextWindow = mWindow.getContext();
+
 
     const char* vertexShaderFile = "../src/shaders/3d_vert.glsl";
     const char* fragmentShaderFile = "../src/shaders/3d_frag.glsl";
     const char* rocks_fragmentShaderFile = "../src/shaders/colourHills_frag.glsl";
     const char* phongFrag = "../src/shaders/phong.glsl";
 
-    shaders::ShaderManager shaderMan = shaders::ShaderManager();
-    shaderMan.addShader(vertexShaderFile, fragmentShaderFile);
-    shaderMan.addShader(vertexShaderFile, rocks_fragmentShaderFile);
-    shaderMan.addShader(vertexShaderFile, phongFrag);
+    // shaders::ShaderManager shaderMan = shaders::ShaderManager();
+    mWindow.addShader(vertexShaderFile, fragmentShaderFile);
+    mWindow.addShader(vertexShaderFile, rocks_fragmentShaderFile);
+    mWindow.addShader(vertexShaderFile, phongFrag);
 
     cam = camera::Camera();
 
@@ -149,7 +152,11 @@ int main() {
     perlinMesh.genPerlinMesh();
 
     // drawable::ThreeDimMesh testD = drawable::ThreeDimMesh(shaderMan, 1, vertices, indices3, sizeof(vertices)/sizeof(float), sizeof(indices)/sizeof(float));
-    drawable::ThreeDimMesh meshDraw = drawable::ThreeDimMesh(shaderMan, 2, perlinMesh.vertices, perlinMesh.indices);
+    drawable::GroundMesh meshDraw = drawable::GroundMesh(2, perlinMesh.vertices, perlinMesh.indices);
+    light::Light mLight = light::Light();
+    mWindow.addLight(&mLight);
+    mWindow.addMesh(&meshDraw);
+    mWindow.setCamera(&cam);
 
     player::Player play(meshDraw, 0.5);
 
@@ -161,9 +168,9 @@ int main() {
     double currentFrameTime;
 
     // Keyboard input callback
-    glfwSetKeyCallback(window, keyCallback);
-    glfwSetCursorPosCallback(window, cursorPosCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetKeyCallback(mWindow.getContext(), keyCallback);
+    glfwSetCursorPosCallback(mWindow.getContext(), cursorPosCallback);
+    glfwSetInputMode(mWindow.getContext(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f); // Gray color with RGB values of 0.5 (50% gray)
 
@@ -171,7 +178,7 @@ int main() {
     double deltaFPSTime = 0;
 
     // Main rendering loop
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(mWindow.getContext())) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         currentFrameTime = glfwGetTime();
@@ -220,15 +227,12 @@ int main() {
 
         // testD.updatePerspective(cam.viewMatrix);
         // testD.draw(window, cam);
-        meshDraw.lightingMode = lightingMode;
-        meshDraw.draw(window, cam);
-        // testD.draw(window, cam);
-
+        mWindow.lightingMode = lightingMode;
+        mWindow.renderFrame();
 
         // Update the previous frame time for the next frame
         previousFrameTime = currentFrameTime;
 
-        glfwSwapBuffers(window);
         glfwPollEvents();
     }
 

@@ -48,3 +48,65 @@ void window::setSmallScreen(GLFWwindow *window)
 {
     glfwSetWindowMonitor(window, NULL, 100, 100, 800, 600, GLFW_DONT_CARE);
 }
+
+window::Window::Window()
+{
+    win = setupWindow();
+}
+
+void window::Window::renderFrame()
+{
+    // To allow rendering to the visible screen, we need the set the context
+    glfwMakeContextCurrent(win);
+
+    // Todo: loop over lights and pass locations and positions to frag shader (need uniform buffer)
+
+    // Activate the appropriate shader program
+    activateShader(meshes[0]->shaderProgramIndex);
+
+    // Get uniform locations for additional parameters
+    // Standard uniforms
+    shaders::setUniformVec(activeShader, "view", cam->viewMatrix);
+    shaders::setUniformVec(activeShader, "viewPos", cam->camPos);
+    shaders::setUniformVec(activeShader, "lightColour", lights[0]->lightColor);
+    shaders::setUniformVec(activeShader, "lightLocation", lights[0]->lightPos);
+    shaders::setUniform(activeShader, "lightingMode", lightingMode);
+    
+    // Model specific uniforms
+    meshes[0]->loadUniforms(activeShader);
+    meshes[0]->fillBuffers(win);
+    meshes[0]->draw(win);
+    // printf("camPos: [%f, %f, %f] \n", cam->camPos[0], cam->camPos[1], cam->camPos[2]);
+
+    glfwSwapBuffers(win);
+}
+
+void window::Window::setFullScreen()
+{
+    window::setFullScreen(win);
+}
+
+void window::Window::setSmallScreen()
+{
+    window::setSmallScreen(win);
+}
+
+void window::Window::addLight(light::Light *mLight)
+{
+    lights.emplace_back(mLight);
+}
+
+void window::Window::addMesh(drawable::GroundMesh *mesh)
+{
+    meshes.emplace_back(mesh);
+}
+
+void window::Window::setCamera(camera::Camera *mCam)
+{
+    cam = mCam;
+}
+
+GLFWwindow *window::Window::getContext()
+{
+    return win;
+}

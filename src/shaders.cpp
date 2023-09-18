@@ -78,6 +78,7 @@ GLuint shaders::genShaderProgram(const char* vertexShaderFile, const char* fragm
     return shaderProgram;
 }
 
+
 unsigned int shaders::ShaderManager::addShader(const char *vertexShader, const char *fragmentShader)
 {
     shaderList.emplace_back(shaders::genShaderProgram(vertexShader, fragmentShader));
@@ -87,9 +88,11 @@ unsigned int shaders::ShaderManager::addShader(const char *vertexShader, const c
 GLuint shaders::ShaderManager::activateShader(unsigned int shaderInd)
 {
     GLuint shaderProgram = shaderList[shaderInd];
-    if (shaderInd != activeShader) {
+
+    if (shaderInd != activeShaderInd) {
         glUseProgram(shaderProgram);
     }
+    activeShader = shaderProgram;
     return shaderProgram;
 }
 
