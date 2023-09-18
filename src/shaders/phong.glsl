@@ -42,10 +42,11 @@ vec3 phong() {
     float diff = max(dot(lightDir, normal), 0.0);
 
     // Compute Specular
-    float specularStrength = 0.5;
+    float specPow = 3;
+    float specularStrength = 0.1;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, normal); 
-    float spec = specularStrength*pow(max(dot(viewDir, reflectDir), 0.0), 32); 
+    float spec = specularStrength*pow(max(dot(viewDir, reflectDir), 0.0), specPow); 
 
     vec3 lighting = (spec + diff + ambientStrength)*lightColour;
 
@@ -61,10 +62,11 @@ vec3 blingPhong() {
     float diff = max(dot(lightDir, normal), 0.0);
 
     // Compute Specular
-    float specularStrength = 0.5;
+    float specPow = 3;
+    float specularStrength = 0.1;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = specularStrength*pow(max(dot(normal, halfwayDir), 0.0), 32); 
+    float spec = specularStrength*pow(max(dot(normal, halfwayDir), 0.0), specPow); 
 
     vec3 lighting = (spec + diff + ambientStrength)*lightColour;
 
