@@ -22,8 +22,10 @@ namespace terrain {
         std::vector<std::vector<float>> heightMap;
 
         void initPerlin();
+        void initSimplex();
         void genMeshFromHeight(std::vector<std::vector<float>> heightMap);
         void genPerlinMesh();
+        void simplex();
 
         MeshGen(float width, float height, int resWidth, int resHeight);
     };

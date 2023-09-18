@@ -52,6 +52,10 @@ void drawable::ThreeDimMesh::draw(GLFWwindow* window, camera::Camera cam)
 
     GLuint camPosLocation = glGetUniformLocation(shaderProgram, "viewPos");
     glUniform3fv(camPosLocation, 1, glm::value_ptr(cam.camPos));
+    // printf("camPos: [%f, %f, %f]\n", cam.camPos[0], cam.camPos[1], cam.camPos[2]);
+
+    GLuint lightingModeLocation = glGetUniformLocation(shaderProgram, "lightingMode");
+    glUniform1i(lightingModeLocation, lightingMode);
 
     // GLuint fogColorLocation = glGetUniformLocation(shaderProgram, "fogColor");
     // glUniform3fv(fogColorLocation, 1, glm::value_ptr(fogColor));
@@ -112,6 +116,7 @@ drawable::ThreeDimMesh::ThreeDimMesh(shaders::ShaderManager &shaderManager, unsi
     rockScale = 0.2f;
     lightColor = {1.0f, 1.0f, 1.0f};
     lightPos = {0.0f, 50.0f, 0.0f};
+    lightingMode = 2;
 
     // Store the model parameters
     mVertices = vertices;

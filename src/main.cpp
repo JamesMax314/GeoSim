@@ -76,6 +76,8 @@ bool keys[GLFW_KEY_LAST] = { false };
 bool fullScreen = false;
 bool toggleFlight = false;
 
+int lightingMode = 2;
+
 double prevMouseX = 0.0;
 double prevMouseY = 0.0;
 double deltaX;
@@ -113,6 +115,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
         if (key == GLFW_KEY_F) {
             toggleFlight = true;
+        }
+
+        if (key == GLFW_KEY_O) {
+            lightingMode += 1;
+            lightingMode = lightingMode%3;
         }
     }
 
@@ -209,10 +216,11 @@ int main() {
         play.physicsUpdate(deltaTime);
 
         cam.setViewMat(play.getCamPos());
+        cam.camPos = play.playerPos;
 
         // testD.updatePerspective(cam.viewMatrix);
         // testD.draw(window, cam);
-
+        meshDraw.lightingMode = lightingMode;
         meshDraw.draw(window, cam);
         // testD.draw(window, cam);
 

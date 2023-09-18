@@ -13,5 +13,5 @@
     {
         gl_Position = projection * view * model * vec4(aPos, 1.0);
         FragPos = vec3(model * vec4(aPos, 1.0)); // Calculate FragPos in world coordinates
-        normal = mat3(transpose(inverse(model)))*aNormal; // Rotates and scales the normals with the model; should do on cpu
+        normal = mat3(transpose(inverse(model)))*aNormal; // Rotates and scales the normals with the model; should do on cpu.
     }

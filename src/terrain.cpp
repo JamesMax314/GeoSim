@@ -11,6 +11,55 @@ terrain::MeshGen::MeshGen(float width, float height, int resWidth, int resHeight
 void terrain::MeshGen::initPerlin()
 {
     // Create a FastNoise object for Perlin noise generation
+    FastNoiseLite lowFrew;
+    FastNoiseLite highFreq;
+    FastNoiseLite highFreq2;
+
+
+    lowFrew.SetFrequency(0.1f);
+    highFreq.SetFrequency(1.0f);
+    highFreq2.SetFrequency(5.0f);
+
+
+    lowFrew.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    highFreq.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    highFreq2.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+
+
+    
+    // Set the seed for deterministic noise
+    lowFrew.SetSeed(12345);
+    highFreq.SetSeed(54321);
+    highFreq2.SetSeed(21);
+
+    float stepX = sizeX / numX;
+    float stepY = sizeY / numY;
+
+    float minX = -sizeX/2;
+    float minY = -sizeY/2;
+
+    // Create a 2D vector to store the Perlin noise values
+    heightMap = std::vector<std::vector<float>>(numX, std::vector<float>(numY));
+
+    // Generate Perlin noise values for each point in the 2D grid
+    for (int x = 0; x < numX; x++) {
+        for (int y = 0; y < numY; y++) {
+            // Generate the Perlin noise value for the current (x, y) point
+            float noiseValue = lowFrew.GetNoise(x*stepX+minX, y*stepY+minY)*2;
+            noiseValue += highFreq.GetNoise(x*stepX+minX, y*stepY+minY)*0.05;
+            noiseValue += highFreq2.GetNoise(x*stepX+minX, y*stepY+minY)*0.01;
+
+
+            // Store the noise value in the 2D array
+            heightMap[x][y] = noiseValue;
+        }
+    }
+    // printf("Noise Generated \n");
+}
+
+void terrain::MeshGen::initSimplex()
+{
+        // Create a FastNoise object for Perlin noise generation
     FastNoiseLite myNoise;
     
     // Set the seed for deterministic noise
@@ -29,7 +78,6 @@ void terrain::MeshGen::initPerlin()
             heightMap[x][y] = noiseValue;
         }
     }
-    // printf("Noise Generated \n");
 }
 
 void terrain::MeshGen::genMeshFromHeight(std::vector<std::vector<float>> heightMap)
@@ -91,4 +139,9 @@ void terrain::MeshGen::genPerlinMesh()
 {
     initPerlin();
     genMeshFromHeight(heightMap);
+}
+
+void terrain::MeshGen::simplex()
+{
+
 }

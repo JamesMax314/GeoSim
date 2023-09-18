@@ -35,8 +35,8 @@ namespace drawable {
         ThreeDimMesh();
         ThreeDimMesh(shaders::ShaderManager &shaderManager, unsigned int shaderInd, std::vector<glm::vec3> vertices, std::vector<unsigned int> indices);
         ~ThreeDimMesh();
-        
 
+        int lightingMode;
         glm::mat4 projection;
         glm::mat4 view;
         glm::mat4 model;

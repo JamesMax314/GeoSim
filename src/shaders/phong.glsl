@@ -7,9 +7,10 @@ uniform float rockScale; // Adjusts how quickly grass changes to rocks
 uniform vec3 lightColour;
 uniform vec3 lightLocation;
 uniform vec3 viewPos;
+uniform int lightingMode;
 
 vec3 lightLoc;
-
+vec3 lighting;
 vec3 lightDir;
 
 vec3 mountainColour(vec3 fragPos)
@@ -26,6 +27,10 @@ vec3 mountainColour(vec3 fragPos)
     finalColor = mix(vec3(finalColor), SeaC, seaStrength);
     
     return finalColor;
+}
+
+vec3 basic() {
+    return vec3(1.0f, 1.0f, 1.0f);
 }
 
 vec3 phong() {
@@ -59,8 +64,7 @@ vec3 blingPhong() {
     float specularStrength = 0.5;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);
-    vec3 reflectDir = reflect(-lightDir, normal); 
-    float spec = specularStrength*pow(max(dot(viewDir, halfwayDir), 0.0), 32); 
+    float spec = specularStrength*pow(max(dot(normal, halfwayDir), 0.0), 32); 
 
     vec3 lighting = (spec + diff + ambientStrength)*lightColour;
 
@@ -68,7 +72,13 @@ vec3 blingPhong() {
 }
 
 void main() {
-    vec3 lighting = blingPhong();
+    if (lightingMode == 0) {
+        lighting = basic();
+    } else if (lightingMode == 1) {
+        lighting = phong();
+    } else if (lightingMode == 2) {
+        lighting = blingPhong();
+    }
 
     vec3 groundColour = mountainColour(FragPos);
 
