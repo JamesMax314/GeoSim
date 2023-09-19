@@ -15,60 +15,6 @@
 #include "player.hpp"
 
 
-// Vertex data for a 3D cube
-float vertices[] = {
-    // Front face
-    -0.5f, -0.5f,  0.5f,
-    0.5f, -0.5f,  0.5f,
-    0.5f,  0.5f,  0.5f,
-    -0.5f,  0.5f,  0.5f,
-    // Back face
-    -0.5f, -0.5f, -0.5f,
-    0.5f, -0.5f, -0.5f,
-    0.5f,  0.5f, -0.5f,
-    -0.5f,  0.5f, -0.5f,
-};
-
-unsigned int indices[] = {
-    0, 1, 2,
-    2, 3, 0,
-    4, 5, 6,
-    6, 7, 4,
-    0, 3, 7,
-    7, 4, 0,
-    1, 2, 6,
-    6, 5, 1,
-    3, 2, 6,
-    6, 7, 3,
-    0, 1, 5,
-    5, 4, 0,
-};
-
-unsigned int indices3[] = {
-    7, 4, 0,
-    0, 0, 0,
-    6, 5, 1,
-    0, 0, 0,
-    6, 7, 3,
-    0, 0, 0,
-    5, 4, 0,
-    0, 0, 0,
-    2, 3, 0,
-    0, 0, 0,
-    6, 7, 4,
-    0, 0, 0,
-};
-
-unsigned int indices2[] = {
-    0, 1, 2,
-    2, 3, 0,
-    4, 5, 6,
-    6, 7, 4,
-    0, 3, 7,
-    7, 4, 0,
-    1, 2, 6,
-};
-
 double deltaTime;
 camera::Camera cam;
 
@@ -77,6 +23,7 @@ bool fullScreen = false;
 bool toggleFlight = false;
 
 int lightingMode = 2;
+int colourMode = 0;
 
 double prevMouseX = 0.0;
 double prevMouseY = 0.0;
@@ -121,6 +68,11 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
             lightingMode += 1;
             lightingMode = lightingMode%3;
         }
+
+        if (key == GLFW_KEY_P) {
+            colourMode += 1;
+            colourMode = colourMode%2;
+        }
     }
 
     if (key == GLFW_KEY_ESCAPE) {
@@ -145,6 +97,8 @@ int main() {
     mWindow.addShader(vertexShaderFile, fragmentShaderFile);
     mWindow.addShader(vertexShaderFile, rocks_fragmentShaderFile);
     mWindow.addShader(vertexShaderFile, phongFrag);
+
+    shaders::Shader terrainShader(vertexShaderFile, phongFrag);
 
     cam = camera::Camera();
 
@@ -228,6 +182,8 @@ int main() {
         // testD.updatePerspective(cam.viewMatrix);
         // testD.draw(window, cam);
         mWindow.lightingMode = lightingMode;
+        mWindow.colourMode = colourMode;
+
         mWindow.renderFrame();
 
         // Update the previous frame time for the next frame

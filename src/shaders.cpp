@@ -96,6 +96,14 @@ GLuint shaders::ShaderManager::activateShader(unsigned int shaderInd)
     return shaderProgram;
 }
 
+shaders::Shader::Shader() {
+
+}
+
+shaders::Shader::Shader(const char *vertexShader, const char *fragmentShader) {
+    program = genShaderProgram(vertexShader, fragmentShader);
+}
+
 void shaders::ShaderManager::close()
 {
     for (int i=0; i<shaderList.size(); i++) {

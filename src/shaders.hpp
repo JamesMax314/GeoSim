@@ -32,6 +32,15 @@ namespace shaders {
         unsigned int activeShaderInd;
     };
 
+    class Shader {
+        public:
+        GLuint program;
+
+        Shader();
+        Shader(const char* vertexShader, const char* fragmentShader);
+
+    };
+
 
     template <typename dataType>
     void setUniformVec(GLuint shaderProgram, const char *name, dataType &data)

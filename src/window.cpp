@@ -71,6 +71,8 @@ void window::Window::renderFrame()
     shaders::setUniformVec(activeShader, "lightColour", lights[0]->lightColor);
     shaders::setUniformVec(activeShader, "lightLocation", lights[0]->lightPos);
     shaders::setUniform(activeShader, "lightingMode", lightingMode);
+    shaders::setUniform(activeShader, "colourMode", colourMode);
+
     
     // Model specific uniforms
     meshes[0]->loadUniforms(activeShader);

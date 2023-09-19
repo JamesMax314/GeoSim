@@ -8,10 +8,13 @@ uniform vec3 lightColour;
 uniform vec3 lightLocation;
 uniform vec3 viewPos;
 uniform int lightingMode;
+uniform int colourMode;
 
 vec3 lightLoc;
 vec3 lighting;
 vec3 lightDir;
+
+vec3 groundColour;
 
 vec3 mountainColour(vec3 fragPos)
 {
@@ -25,6 +28,21 @@ vec3 mountainColour(vec3 fragPos)
     
     vec3 finalColor = mix(vec3(FragC), RockC, rockStrength); // Mix the original color with fog color
     finalColor = mix(vec3(finalColor), SeaC, seaStrength);
+    
+    return finalColor;
+}
+
+vec3 mountainColourGrad()
+{
+    vec3 GrassC = vec3(0.251, 0.4824, 0.251);
+    vec3 RockC = vec3(0.6039, 0.4, 0.3137);
+    // vec3 SeaC = vec3(0.5, 0.5, 1.0);
+    vec3 vert = vec3(0.0f, 1.0f, 0.0f);
+
+    float rockStrength = (1-dot(normalize(normal), vert)); // Calculate how rocky based on height
+    rockStrength = clamp(rockStrength, 0.0f, 1.0f); // Clamp the fog factor to the range [0, 1]
+    
+    vec3 finalColor = mix(GrassC, RockC, rockStrength); // Mix the original color with fog color
     
     return finalColor;
 }
@@ -82,7 +100,11 @@ void main() {
         lighting = blingPhong();
     }
 
-    vec3 groundColour = mountainColour(FragPos);
+    if (colourMode == 0) {
+        groundColour = mountainColour(FragPos);
+    } else if (colourMode == 1) {
+        groundColour = mountainColourGrad();
+    } 
 
     vec3 result = lighting * groundColour;
     FragColor = vec4(result, 1.0);

@@ -16,7 +16,7 @@
 - [ ] Use raymarched rayleigh scattering;
 
 ## Restructure
-- [ ] World should do rendering;
+- [x] World should do rendering;
 - [ ] World stores an array of lighting objects, drawables and a camera;
 - [ ] World passes the lighting parameters to the drawable shader along with its own uniforms;
 
@@ -41,8 +41,12 @@ classDiagram
         +Terrain(as before)
     }
 
-    Drawable <|-- Terrain
-    Drawable <|-- Light
+    Drawable <|-- ThreeDMesh
+    Drawable <|-- TwoDMesh
+    TwoDMesh <|-- Atmosphere
+    ThreeDMesh <|-- PhysicsObj
+    ThreeDMesh <|-- Terrain
+    ThreeDMesh <|-- Light
 
     class Window {
         -GLFWwindow* window

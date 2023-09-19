@@ -26,6 +26,7 @@ namespace window {
         GLFWwindow* win;
 
         int lightingMode;
+        int colourMode;
 
         camera::Camera* cam;
         std::vector<light::Light*> lights;
